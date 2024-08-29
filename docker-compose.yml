@@ -1,24 +1,22 @@
 version: '3.3'
 services:
-  app:
-    build: .
-    depends_on:
-      - postgres
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-    ports:
-      - "3000:3000"
+  # app:
+  #   build: .
+  #   depends_on:
+  #     - postgres
+  #   environment:
+  #     DATABASE_URL: postgresql://my_user:my_pwd@localhost:5432/automotive_parts_organizational_system
+  #   ports:
+  #     - "3000:3000"
   postgres:
     image: postgres:15
     container_name: postgres-database-container
     environment:
-      POSTGRES_USER: ${POSTGRES_DB_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_DB_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB_NAME}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      POSTGRES_USER: my_user
+      POSTGRES_PASSWORD: my_pwd
+      POSTGRES_DB: automotive_parts_organizational_system
     ports:
       - "5432:5432"
-volumes:
-  postgres_data:
-    driver: local
+# volumes:
+#   postgres_data:
+#     driver: local
