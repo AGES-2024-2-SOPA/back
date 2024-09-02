@@ -54,11 +54,9 @@ model User {
 
   Seller Seller[] @relation("SellerUser")
   Buyer Buyer[] @relation("BuyerUser")
-  // Purchase Purchase[] @relation("SellerUser")
-  // Purchase Purchase[] @relation("BuyerUser")
+  PurchaseUser PurchaseUser[] @relation("PurchaseUser")
 
   @@map("User")
-  
 }
 
 // Table Seller {
@@ -116,7 +114,8 @@ model Seller {
   created_at      DateTime @default(now()) @db.Timestamp(6)
 
   user            User     @relation("SellerUser", fields: [user_id], references: [id])
-
+  Car Car[] @relation("CarSeller")
+  
   @@map("Seller")
 }
 
@@ -191,219 +190,225 @@ model Brand {
   updated_at DateTime @default(now()) @db.Timestamp(6)
   created_at DateTime @default(now()) @db.Timestamp(6)
 
-  // models     Model[]  @relation("BrandModels")
+  models     Model[]  @relation("BrandModels")
 
   @@map("Brand")
 }
 
-// // Table Model {
-// //   id integer [primary key]
-// //   enumerator varchar
-// //   brand_id integer
+// Table Model {
+//   id integer [primary key]
+//   enumerator varchar
+//   brand_id integer
 
-// //   updated_at timestamp
-// //   created_at timestamp
-// // }
-
-// model Model {
-//   id         Int      @id @default(autoincrement())
-//   enumerator String   @db.VarChar
-//   brand_id    Int
-//   updated_at  DateTime @default(now()) @db.Timestamp(6)
-//   created_at  DateTime @default(now()) @db.Timestamp(6)
-
-//   brand      Brand    @relation("BrandModels", fields: [brand_id], references: [id])
-
-//   cars       Car[]    @relation("ModelCars")
-
-//   @@map("Model")
+//   updated_at timestamp
+//   created_at timestamp
 // }
 
-// //   Table Car {
-// //     id integer [primary key]
-// //     seller_id integer
-// //     model_id integer
-// //     release_year year
-// //     cost decimal(19,2)
-// //     purchase_date date
+model Model {
+  id         Int      @id @default(autoincrement())
+  enumerator String   @db.VarChar
+  brand_id    Int
+  updated_at  DateTime @default(now()) @db.Timestamp(6)
+  created_at  DateTime @default(now()) @db.Timestamp(6)
 
-// //     updated_at timestamp
-// //     created_at timestamp
-// //   }
+  brand      Brand    @relation("BrandModels", fields: [brand_id], references: [id])
 
-// model Car {
-//   id            Int      @id @default(autoincrement())
-//   seller_id     Int
-//   model_id      Int
-//   release_year  DateTime @db.Year
-//   cost          Float    @db.Decimal(19, 2)
-//   purchase_date DateTime @db.Date
-//   updated_at    DateTime @default(now()) @db.Timestamp(6)
-//   created_at    DateTime @default(now()) @db.Timestamp(6)
+  cars       Car[]    @relation("ModelCars")
 
-//   seller        Seller   @relation("CarSeller", fields: [seller_id], references: [user_id])
-//   model         Model    @relation("ModelCars", fields: [model_id], references: [id])
+  @@map("Model")
+}
 
-//   parts         Part[]   @relation("CarParts")
+//   Table Car {
+//     id integer [primary key]
+//     seller_id integer
+//     model_id integer
+//     release_year year
+//     cost decimal(19,2)
+//     purchase_date date
 
-//   @@map("Car")
+//     updated_at timestamp
+//     created_at timestamp
+//   }
+
+model Car {
+  id            Int      @id @default(autoincrement())
+  seller_id     Int
+  model_id      Int
+  release_year  DateTime @db.Date
+  cost          Float    @db.DoublePrecision
+  purchase_date DateTime @db.Date
+  updated_at    DateTime @default(now()) @db.Timestamp(6)
+  created_at    DateTime @default(now()) @db.Timestamp(6)
+
+  seller        Seller   @relation("CarSeller", fields: [seller_id], references: [user_id])
+  model         Model    @relation("ModelCars", fields: [model_id], references: [id])
+
+  parts         Part[]   @relation("CarParts")
+
+  @@map("Car")
+}
+
+// Table PartStatus {
+//   id integer [primary key]
+//   enumerator varchar
+//   updated_at timestamp
+//   created_at timestamp
 // }
 
-// // Table PartStatus {
-// //   id integer [primary key]
-// //   enumerator varchar
-// //   updated_at timestamp
-// //   created_at timestamp
-// // }
+model PartStatus {
+  id         Int      @id @default(autoincrement())
+  enumerator String   @db.VarChar
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  created_at DateTime @default(now()) @db.Timestamp(6)
 
-// model PartStatus {
-//   id         Int      @id @default(autoincrement())
-//   enumerator String   @db.VarChar
-//   updated_at DateTime @default(now()) @db.Timestamp(6)
-//   created_at DateTime @default(now()) @db.Timestamp(6)
+  parts      Part[]   @relation("PartStatusParts")
 
-//   parts      Part[]   @relation("PartStatusParts")
+  @@map("PartStatus")
+}
 
-//   @@map("PartStatus")
+// Table PartType {
+//   id integer [primary key]
+//   enumerator varchar
+
+//   updated_at timestamp
+//   created_at timestamp
 // }
 
-// // Table PartType {
-// //   id integer [primary key]
-// //   enumerator varchar
+model PartType {
+  id         Int      @id @default(autoincrement())
+  enumerator String   @db.VarChar
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  created_at DateTime @default(now()) @db.Timestamp(6)
 
-// //   updated_at timestamp
-// //   created_at timestamp
-// // }
+  parts      Part[]   @relation("PartTypeParts")
 
-// model PartType {
-//   id         Int      @id @default(autoincrement())
-//   enumerator String   @db.VarChar
-//   updated_at DateTime @default(now()) @db.Timestamp(6)
-//   created_at DateTime @default(now()) @db.Timestamp(6)
+  @@map("PartType")
+}
 
-//   parts      Part[]   @relation("PartTypeParts")
+// Table Part {
+//   id integer [primary key]
+//   car_id integer
+//   part_status_id integer
+//   part_type_id integer
+//   description varchar
+//   price decimal(19,2)
 
-//   @@map("PartType")
+//   updated_at timestamp
+//   created_at timestamp
 // }
 
-// // Table Part {
-// //   id integer [primary key]
-// //   car_id integer
-// //   part_status_id integer
-// //   part_type_id integer
-// //   description varchar
-// //   price decimal(19,2)
+model Part {
+  id            Int      @id @default(autoincrement())
+  car_id        Int
+  part_status_id Int
+  part_type_id  Int
+  description   String   @db.VarChar
+  price         Float    @db.DoublePrecision
+  updated_at    DateTime @default(now()) @db.Timestamp(6)
+  created_at    DateTime @default(now()) @db.Timestamp(6)
 
-// //   updated_at timestamp
-// //   created_at timestamp
-// // }
+  car           Car      @relation("CarParts", fields: [car_id], references: [id])
+  part_status   PartStatus @relation("PartStatusParts", fields: [part_status_id], references: [id])
+  part_type     PartType @relation("PartTypeParts", fields: [part_type_id], references: [id])
 
-// model Part {
-//   id            Int      @id @default(autoincrement())
-//   car_id        Int
-//   part_status_id Int
-//   part_type_id  Int
-//   description   String   @db.VarChar
-//   price         Float    @db.Decimal(19, 2)
-//   updated_at    DateTime @default(now()) @db.Timestamp(6)
-//   created_at    DateTime @default(now()) @db.Timestamp(6)
+  purchases     Purchase[] @relation("PartPurchases")
 
-//   car           Car      @relation("CarParts", fields: [car_id], references: [id])
-//   part_status   PartStatus @relation("PartStatusParts", fields: [part_status_id], references: [id])
-//   part_type     PartType @relation("PartTypeParts", fields: [part_type_id], references: [id])
+  @@map("Part")
+  PurchasePart PurchasePart[]
+}
 
-//   purchases     Purchase[] @relation("PartPurchases")
-
-//   @@map("Part")
+// Table PurchaseStatus {
+//   id integer [primary key]
+//   enumerator varchar
+//   updated_at timestamp
+//   created_at timestamp
 // }
 
-// // Table PurchaseStatus {
-// //   id integer [primary key]
-// //   enumerator varchar
-// //   updated_at timestamp
-// //   created_at timestamp
-// // }
+model PurchaseStatus {
+  id         Int      @id @default(autoincrement())
+  enumerator String   @db.VarChar
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  created_at DateTime @default(now()) @db.Timestamp(6)
 
-// model PurchaseStatus {
-//   id         Int      @id @default(autoincrement())
-//   enumerator String   @db.VarChar
-//   updated_at DateTime @default(now()) @db.Timestamp(6)
-//   created_at DateTime @default(now()) @db.Timestamp(6)
+  purchases  Purchase[] @relation("PurchaseStatusPurchases")
 
-//   purchases  Purchase[] @relation("PurchaseStatusPurchases")
+  @@map("PurchaseStatus")
+}
 
-//   @@map("PurchaseStatus")
+// Table Purchase {
+//   id integer [primary key]
+//   purchase_status_id integer
+//   description varchar
+//   updated_at timestamp
+//   created_at timestamp
 // }
 
-// // Table Purchase {
-// //   id integer [primary key]
-// //   seller_id integer
-// //   buyer_id integer
-// //   purchase_status_id integer
-// //   description varchar
+model Purchase {
+  id                Int      @id @default(autoincrement())
+  purchase_status_id Int
+  description       String   @db.VarChar
+  updated_at        DateTime @default(now()) @db.Timestamp(6)
+  created_at        DateTime @default(now()) @db.Timestamp(6)
 
-// //   updated_at timestamp
-// //   created_at timestamp
-// // }
+  purchase_status   PurchaseStatus @relation("PurchaseStatusPurchases", fields: [purchase_status_id], references: [id])
 
-// model Purchase {
-//   id                Int      @id @default(autoincrement())
-//   seller_id         Int
-//   buyer_id          Int
-//   purchase_status_id Int
-//   description       String   @db.VarChar
-//   updated_at        DateTime @default(now()) @db.Timestamp(6)
-//   created_at        DateTime @default(now()) @db.Timestamp(6)
+  parts             Part[] @relation("PartPurchases")
 
-//   seller            User     @relation("SellerUser", fields: [seller_id], references: [id])
-//   buyer             User     @relation("BuyerUser", fields: [buyer_id], references: [id])
-//   purchase_status   PurchaseStatus @relation("PurchaseStatusPurchases", fields: [purchase_status_id], references: [id])
+  @@map("Purchase")
+  PurchaseUser PurchaseUser[] @relation("PurchaseUser")
+  PurchasePart PurchasePart[]
+}
 
-//   parts             Part[]   @relation("PartPurchases")
-
-//   @@map("Purchase")
+// Table PurchaseRole {
+//   id integer [primary key]
+//   enumerator varchar
+//   updated_at timestamp
+//   created_at timestamp
 // }
 
-// // Table PurchaseParts {
-// //   purchase_id integer
-// //   part_id integer
-// // }
+model PurchaseRole {
+  id         Int      @id @default(autoincrement())
+  enumerator String   @db.VarChar
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  created_at DateTime @default(now()) @db.Timestamp(6)
 
-// model PurchaseParts {
-//   purchase_id Int
-//   part_id     Int
+  @@map("PurchaseRole")
+}
 
-//   purchase    Purchase @relation(fields: [purchase_id], references: [id])
-//   part        Part     @relation(fields: [part_id], references: [id])
-
-//   @@id([purchase_id, part_id])
-//   @@map("PurchaseParts")
+// Table PurchaseUsers {
+//   user_id integer
+//   purchase_id integer
+//   role_id integer
+//   updated_at timestamp
+//   created_at timestamp
 // }
 
+model PurchaseUser {
+  user_id     Int      @id
+  purchase_id Int
+  role_id     Int
+  updated_at  DateTime @default(now()) @db.Timestamp(6)
+  created_at  DateTime @default(now()) @db.Timestamp(6)
 
+  user        User     @relation("PurchaseUser", fields: [user_id], references: [id])
+  purchase    Purchase @relation("PurchaseUser", fields: [purchase_id], references: [id])
 
+  @@map("PurchaseUser")
+  
+}
 
+// Table PurchaseParts {
+//   purchase_id integer
+//   part_id integer
+// }
 
-// // Ref: Buyer.user_id > User.id
+model PurchasePart {
+  purchase_id Int
+  part_id     Int
 
-// // Ref: Car.seller_id > Seller.user_id
+  purchase    Purchase @relation(fields: [purchase_id], references: [id])
+  part        Part     @relation(fields: [part_id], references: [id])
 
-// // Ref: Car.id < Part.car_id
-
-// // Ref: PartStatus.id < Part.part_status_id
-
-// // Ref: PartType.id < Part.part_type_id
-
-// // Ref: Brand.id < Model.brand_id
-
-// // Ref: Model.id < Car.model_id
-
-// // Ref: Buyer.user_id < Purchase.buyer_id
-
-// // Ref: Seller.user_id < Purchase.seller_id
-
-// // Ref: PurchaseStatus.id < Purchase.purchase_status_id
-
-// // Ref: "Purchase"."id" < "PurchaseParts"."purchase_id"
-
-// // Ref: "Part"."id" < "PurchaseParts"."part_id"
+  @@id([purchase_id, part_id])
+  @@map("PurchasePart")
+}

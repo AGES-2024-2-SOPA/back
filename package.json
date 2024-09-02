@@ -14,7 +14,7 @@
     "start:seed": "npx prisma generate && npx prisma migrate deploy $$ npm run start:debug",
     "restart:db": "npx prisma migrate reset --preview-feature",
     "migrate:db": "npx prisma migrate dev --name init",
-    "db:seed": "npx prisma db seed --preview-feature",
+    "db:seed": "npx prisma db seed",
 
     "dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
