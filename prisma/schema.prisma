@@ -1,0 +1,415 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Table Role {
+//   id integer [primary key]
+//   enumerator varchar
+  
+//   updated_at timestamp
+//   created_at timestamp
+// }
+
+model Role {
+  id         Int      @id @default(autoincrement())
+  enumerator String   @db.VarChar
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  created_at DateTime @default(now()) @db.Timestamp(6)
+
+  users      User[]   @relation("RoleUsers")
+
+  @@map("Role")
+}
+
+// Table User {
+//   id integer [primary key]
+//   username varchar
+//   email vachar
+//   password varchar
+//   document_number varchar[11]
+//   role_id integer
+
+//   updated_at timestamp
+//   created_at timestamp
+// }
+
+// Ref: Role.id < User.role_id
+
+model User {
+  id              Int      @id @default(autoincrement())
+  username        String   @db.VarChar
+  email           String   @db.VarChar
+  password        String   @db.VarChar
+  document_number String   @db.VarChar(11)
+  is_active       Boolean  @default(true)
+  role_id         Int
+  updated_at      DateTime @default(now()) @db.Timestamp(6)
+  created_at      DateTime @default(now()) @db.Timestamp(6)
+  role            Role     @relation("RoleUsers", fields: [role_id], references: [id])
+
+
+  Seller Seller[] @relation("SellerUser")
+  Buyer Buyer[] @relation("BuyerUser")
+  PurchaseUser PurchaseUser[] @relation("PurchaseUser")
+
+  @@map("User")
+}
+
+// Table Seller {
+//   user_id integer [primary key]
+//   seller_code varchar[11]
+
+//   company_name varchar
+//   trading_name varchar
+
+//   document_number varchar[11]
+
+//   email varchar
+
+//   phone_country_code varchar[3]
+//   phone_area_code varchar[2]
+//   phone_number varchar[9]
+
+//   street varchar
+//   neighborhood varchar
+//   number varchar
+//   city varchar
+//   state varchar[2]
+//   complement varchar
+//   postal_code varchar[8]
+
+
+//   updated_at timestamp
+//   created_at timestamp
+// }
+
+model Seller {
+  user_id         Int      @id
+  seller_code     String   @db.VarChar(11)
+
+  company_name    String   @db.VarChar
+  trading_name    String   @db.VarChar
+
+  document_number String   @db.VarChar(11)
+
+  email           String   @db.VarChar
+
+  phone_country_code String @db.VarChar(3)
+  phone_area_code String    @db.VarChar(2)
+  phone_number    String   @db.VarChar(9)
+
+  street          String   @db.VarChar
+  neighborhood    String   @db.VarChar
+  number          String   @db.VarChar
+  city            String   @db.VarChar
+  state           String   @db.VarChar(2)
+  complement      String   @db.VarChar
+  postal_code     String   @db.VarChar(8)
+  
+  updated_at      DateTime @default(now()) @db.Timestamp(6)
+  created_at      DateTime @default(now()) @db.Timestamp(6)
+
+  user            User     @relation("SellerUser", fields: [user_id], references: [id])
+  Car Car[] @relation("CarSeller")
+  
+  @@map("Seller")
+}
+
+// Table Buyer {
+//   user_id integer [primary key]
+
+//   company_name varchar
+//   trading_name varchar
+
+//   document_number varchar[11]
+
+//   email varchar
+
+//   phone_country_code varchar[3]
+//   phone_area_code varchar[2]
+//   phone_number varchar[9]
+
+//   street varchar
+//   neighborhood varchar
+//   number varchar
+//   city varchar
+//   state varchar[2]
+//   complement varchar
+//   postal_code varchar[8]
+
+
+//   updated_at timestamp
+//   created_at timestamp
+// }
+
+model Buyer {
+  user_id         Int      @id
+
+  company_name    String   @db.VarChar
+  trading_name    String   @db.VarChar
+
+  document_number String   @db.VarChar(11)
+
+  email           String   @db.VarChar
+
+  phone_country_code String @db.VarChar(3)
+  phone_area_code String    @db.VarChar(2)
+  phone_number    String   @db.VarChar(9)
+
+  street          String   @db.VarChar
+  neighborhood    String   @db.VarChar
+  number          String   @db.VarChar
+  city            String   @db.VarChar
+  state           String   @db.VarChar(2)
+  complement      String   @db.VarChar
+  postal_code     String   @db.VarChar(8)
+  
+  updated_at      DateTime @default(now()) @db.Timestamp(6)
+  created_at      DateTime @default(now()) @db.Timestamp(6)
+
+  user            User     @relation("BuyerUser", fields: [user_id], references: [id])
+
+  @@map("Buyer")
+}
+
+// Table Brand {
+//   id integer [primary key]
+//   enumerator varchar
+  
+//   updated_at timestamp
+//   created_at timestamp
+// }
+
+model Brand {
+  id         Int      @id @default(autoincrement())
+  enumerator String   @db.VarChar
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  created_at DateTime @default(now()) @db.Timestamp(6)
+
+  models     Model[]  @relation("BrandModels")
+
+  @@map("Brand")
+}
+
+// Table Model {
+//   id integer [primary key]
+//   enumerator varchar
+//   brand_id integer
+
+//   updated_at timestamp
+//   created_at timestamp
+// }
+
+model Model {
+  id         Int      @id @default(autoincrement())
+  enumerator String   @db.VarChar
+  brand_id    Int
+  updated_at  DateTime @default(now()) @db.Timestamp(6)
+  created_at  DateTime @default(now()) @db.Timestamp(6)
+
+  brand      Brand    @relation("BrandModels", fields: [brand_id], references: [id])
+
+  cars       Car[]    @relation("ModelCars")
+
+  @@map("Model")
+}
+
+//   Table Car {
+//     id integer [primary key]
+//     seller_id integer
+//     model_id integer
+//     release_year year
+//     cost decimal(19,2)
+//     purchase_date date
+
+//     updated_at timestamp
+//     created_at timestamp
+//   }
+
+model Car {
+  id            Int      @id @default(autoincrement())
+  seller_id     Int
+  model_id      Int
+  release_year  DateTime @db.Date
+  cost          Float    @db.DoublePrecision
+  purchase_date DateTime @db.Date
+  updated_at    DateTime @default(now()) @db.Timestamp(6)
+  created_at    DateTime @default(now()) @db.Timestamp(6)
+
+  seller        Seller   @relation("CarSeller", fields: [seller_id], references: [user_id])
+  model         Model    @relation("ModelCars", fields: [model_id], references: [id])
+
+  parts         Part[]   @relation("CarParts")
+
+  @@map("Car")
+}
+
+// Table PartStatus {
+//   id integer [primary key]
+//   enumerator varchar
+//   updated_at timestamp
+//   created_at timestamp
+// }
+
+model PartStatus {
+  id         Int      @id @default(autoincrement())
+  enumerator String   @db.VarChar
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  created_at DateTime @default(now()) @db.Timestamp(6)
+
+  parts      Part[]   @relation("PartStatusParts")
+
+  @@map("PartStatus")
+}
+
+// Table PartType {
+//   id integer [primary key]
+//   enumerator varchar
+
+//   updated_at timestamp
+//   created_at timestamp
+// }
+
+model PartType {
+  id         Int      @id @default(autoincrement())
+  enumerator String   @db.VarChar
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  created_at DateTime @default(now()) @db.Timestamp(6)
+
+  parts      Part[]   @relation("PartTypeParts")
+
+  @@map("PartType")
+}
+
+// Table Part {
+//   id integer [primary key]
+//   car_id integer
+//   part_status_id integer
+//   part_type_id integer
+//   description varchar
+//   price decimal(19,2)
+
+//   updated_at timestamp
+//   created_at timestamp
+// }
+
+model Part {
+  id            Int      @id @default(autoincrement())
+  car_id        Int
+  part_status_id Int
+  part_type_id  Int
+  description   String   @db.VarChar
+  price         Float    @db.DoublePrecision
+  updated_at    DateTime @default(now()) @db.Timestamp(6)
+  created_at    DateTime @default(now()) @db.Timestamp(6)
+
+  car           Car      @relation("CarParts", fields: [car_id], references: [id])
+  part_status   PartStatus @relation("PartStatusParts", fields: [part_status_id], references: [id])
+  part_type     PartType @relation("PartTypeParts", fields: [part_type_id], references: [id])
+
+  purchases     Purchase[] @relation("PartPurchases")
+
+  @@map("Part")
+  PurchasePart PurchasePart[]
+}
+
+// Table PurchaseStatus {
+//   id integer [primary key]
+//   enumerator varchar
+//   updated_at timestamp
+//   created_at timestamp
+// }
+
+model PurchaseStatus {
+  id         Int      @id @default(autoincrement())
+  enumerator String   @db.VarChar
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  created_at DateTime @default(now()) @db.Timestamp(6)
+
+  purchases  Purchase[] @relation("PurchaseStatusPurchases")
+
+  @@map("PurchaseStatus")
+}
+
+// Table Purchase {
+//   id integer [primary key]
+//   purchase_status_id integer
+//   description varchar
+//   updated_at timestamp
+//   created_at timestamp
+// }
+
+model Purchase {
+  id                Int      @id @default(autoincrement())
+  purchase_status_id Int
+  description       String   @db.VarChar
+  updated_at        DateTime @default(now()) @db.Timestamp(6)
+  created_at        DateTime @default(now()) @db.Timestamp(6)
+
+  purchase_status   PurchaseStatus @relation("PurchaseStatusPurchases", fields: [purchase_status_id], references: [id])
+
+  parts             Part[] @relation("PartPurchases")
+
+  @@map("Purchase")
+  PurchaseUser PurchaseUser[] @relation("PurchaseUser")
+  PurchasePart PurchasePart[]
+}
+
+// Table PurchaseRole {
+//   id integer [primary key]
+//   enumerator varchar
+//   updated_at timestamp
+//   created_at timestamp
+// }
+
+model PurchaseRole {
+  id         Int      @id @default(autoincrement())
+  enumerator String   @db.VarChar
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  created_at DateTime @default(now()) @db.Timestamp(6)
+
+  @@map("PurchaseRole")
+}
+
+// Table PurchaseUsers {
+//   user_id integer
+//   purchase_id integer
+//   role_id integer
+//   updated_at timestamp
+//   created_at timestamp
+// }
+
+model PurchaseUser {
+  user_id     Int      @id
+  purchase_id Int
+  role_id     Int
+  updated_at  DateTime @default(now()) @db.Timestamp(6)
+  created_at  DateTime @default(now()) @db.Timestamp(6)
+
+  user        User     @relation("PurchaseUser", fields: [user_id], references: [id])
+  purchase    Purchase @relation("PurchaseUser", fields: [purchase_id], references: [id])
+
+  @@map("PurchaseUser")
+  
+}
+
+// Table PurchaseParts {
+//   purchase_id integer
+//   part_id integer
+// }
+
+model PurchasePart {
+  purchase_id Int
+  part_id     Int
+
+  purchase    Purchase @relation(fields: [purchase_id], references: [id])
+  part        Part     @relation(fields: [part_id], references: [id])
+
+  @@id([purchase_id, part_id])
+  @@map("PurchasePart")
+}
