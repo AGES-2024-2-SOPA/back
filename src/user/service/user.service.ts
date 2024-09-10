@@ -3,6 +3,8 @@ import { Role, User } from '@prisma/client';
 
 import { PrismaService } from 'src/shared/prisma/prisma.service';
 import { UserDTO } from '../dtos/user.dto';
+import { hash } from 'src/Security';
+
 
 @Injectable()
 export class UserService {
@@ -60,6 +62,7 @@ export class UserService {
   }
 
   async create(data: UserDTO): Promise<User> {
+    //const passwordHash = await hash(data.password);
     return this.prisma.user.create({
       data: {
         document_number: data.document_number,
@@ -73,12 +76,13 @@ export class UserService {
   }
 
   async update(id: number, data: UserDTO): Promise<User> {
+    const passwordHash = await hash(data.password);
     return this.prisma.user.update({
       where: { id: parseInt(id.toString()) },
       data: {
         username: data.username,
         email: data.email,
-        password: data.password,
+        password: passwordHash,
         document_number: data.document_number,
         role_id: data.role_id,
       },

@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-
+import * as bcrypt from 'bcrypt';
 import { UserService } from 'src/user/service/user.service';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class AuthService {
     accessToken: string;
   }> {
     const user = await this.userService.findByEmail(email);
-    if (user.password !== pass) {
+    if (await bcrypt.compare(pass, user.password)) {
       throw new HttpException(
         {
           status: HttpStatus.UNAUTHORIZED,
