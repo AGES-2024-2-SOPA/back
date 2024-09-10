@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Role, User } from '@prisma/client';
+
 import { PrismaService } from 'src/shared/prisma/prisma.service';
-import { User } from '@prisma/client';
 import { UserDTO } from '../dtos/user.dto';
 
 @Injectable()
@@ -18,7 +19,38 @@ export class UserService {
       })
       .then((user) => {
         if (!user) {
-          return null;
+          throw new HttpException(
+            {
+              status: HttpStatus.NOT_FOUND,
+              error: 'User not found',
+              translation: 'Usuário não encontrado',
+            },
+            HttpStatus.NOT_FOUND,
+          );
+        }
+        return user;
+      })
+      .catch((error) => {
+        return error;
+      });
+  }
+
+  async findByEmail(email: string): Promise<User & { role: Role }> {
+    return this.prisma.user
+      .findUnique({
+        where: { email },
+        include: { role: true },
+      })
+      .then((user) => {
+        if (!user) {
+          throw new HttpException(
+            {
+              status: HttpStatus.NOT_FOUND,
+              error: 'User not found',
+              translation: 'Usuário não encontrado',
+            },
+            HttpStatus.NOT_FOUND,
+          );
         }
         return user;
       })
