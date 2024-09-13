@@ -46,18 +46,12 @@ export class UserService {
       })
       .then((user) => {
         if (!user) {
-          throw new HttpException(
-            {
-              status: HttpStatus.NOT_FOUND,
-              error: 'User not found',
-              translation: 'Usuário não encontrado',
-            },
-            HttpStatus.NOT_FOUND,
-          );
+          return null;
         }
         return user;
       })
       .catch((error) => {
+        console.log(error);
         return null;
       });
   }

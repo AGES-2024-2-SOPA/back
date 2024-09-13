@@ -21,8 +21,8 @@ export class AuthService {
       throw new HttpException(
         {
           status: HttpStatus.UNAUTHORIZED,
-          error: 'E-mail or password is incorrect',
-          translation: 'E-mail ou senha incorretos',
+          error: 'Password or e-mail password is incorrect',
+          translation: 'Senha ou e-mail incorretos',
         },
         HttpStatus.UNAUTHORIZED,
       );
