@@ -38,6 +38,7 @@ export class UserService {
   }
 
   async findByEmail(email: string): Promise<User & { role: Role }> {
+    // @ts-ignore
     return this.prisma.user
       .findUnique({
         where: { email },
@@ -57,7 +58,7 @@ export class UserService {
         return user;
       })
       .catch((error) => {
-        return error;
+        return null;
       });
   }
 

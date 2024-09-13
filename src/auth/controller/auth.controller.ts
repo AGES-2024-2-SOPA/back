@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from "@nestjs/common";
 
 import { AuthService } from 'src/auth/service/auth.service';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
@@ -25,6 +25,7 @@ export class AuthController {
     },
   })
   @Post('sign_in')
+  @HttpCode(200)
   async signIn(@Body() auth: AuthDTO): Promise<{
     accessToken: string;
   }> {
