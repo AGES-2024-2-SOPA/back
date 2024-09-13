@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UserService } from 'src/user/service/user.service';
 
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -18,17 +17,7 @@ export class AuthService {
     accessToken: string;
   }> {
     const user = await this.userService.findByEmail(email);
-    if (!user){
-      throw new HttpException(
-        {
-          status: HttpStatus.UNAUTHORIZED,
-          error: 'E-mail not found',
-          translation: 'E-mail não encontrado',
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-    if (!await bcrypt.compare(pass, user.password)) {
+    if (!user) {
       throw new HttpException(
         {
           status: HttpStatus.UNAUTHORIZED,
@@ -38,7 +27,16 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     }
-
+    if (!(await bcrypt.compare(pass, user.password))) {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          error: 'E-mail or password is incorrect',
+          translation: 'E-mail ou senha incorretos',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
 
     const payload = { id: user.id, role: user.role.enumerator };
     return {
