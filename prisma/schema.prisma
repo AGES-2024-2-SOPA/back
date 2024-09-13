@@ -58,6 +58,7 @@ model User {
   PurchaseUser PurchaseUser[] @relation("PurchaseUser")
 
   @@map("User")
+  @@unique([email])
 }
 
 // Table Seller {
