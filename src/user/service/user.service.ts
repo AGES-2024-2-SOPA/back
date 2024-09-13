@@ -62,13 +62,13 @@ export class UserService {
   }
 
   async create(data: UserDTO): Promise<User> {
-    //const passwordHash = await hash(data.password);
+    const passwordHash = await hash(data.password);
     return this.prisma.user.create({
       data: {
         document_number: data.document_number,
         email: data.email,
         is_active: true,
-        password: data.password,
+        password: passwordHash,
         username: data.username,
         role_id: data.role_id,
       },
