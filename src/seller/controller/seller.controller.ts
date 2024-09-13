@@ -52,6 +52,10 @@ export class SellerController {
                         },
                     },
                 },
+                seller_code: {
+                    type: 'string',
+                    example: '11111111111',
+                },
                 company_name: {
                     type: 'string',
                     example: 'ferro_velho',
@@ -96,6 +100,10 @@ export class SellerController {
                     type: 'string',
                     example: 'Porto Alegre',
                 },
+                state: {
+                    type: 'string',
+                    example: 'RS',
+                },
                 complement: {
                     type: 'string',
                     example: '4',
@@ -110,6 +118,6 @@ export class SellerController {
     @Post()
     async createSeller(@Body() data: SellerDTO): Promise<Seller> {
         console.log(data);
-        return this.sellerService.createSeller(data);
+        return this.sellerService.create(data);
     }
 }
