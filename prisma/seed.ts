@@ -47,10 +47,9 @@ async function createRoles() {
 
 async function createUsers() {
   await prisma.user.upsert({
-    where: { id: 1 },
+    where: { email: 'admin@email.com' },
     update: {},
     create: {
-      id: 1,
       username: 'admin',
       email: 'admin@email.com',
       password: 'admin',
@@ -60,10 +59,9 @@ async function createUsers() {
   });
 
   await prisma.user.upsert({
-    where: { id: 2 },
+    where: { email: 'user@email.com' },
     update: {},
     create: {
-      id: 2,
       username: 'user',
       email: 'user@email.com',
       password: 'user',
@@ -73,10 +71,9 @@ async function createUsers() {
   });
 
   await prisma.user.upsert({
-    where: { id: 3 },
+    where: { email: 'seller.user@email.com' },
     update: {},
     create: {
-      id: 3,
       username: 'seller.user',
       email: 'seller.user@email.com',
       password: 'seller.user',
@@ -86,10 +83,9 @@ async function createUsers() {
   });
 
   await prisma.user.upsert({
-    where: { id: 4 },
+    where: { email: 'buyer.user@email.com' },
     update: {},
     create: {
-      id: 4,
       username: 'buyer.user',
       email: 'buyer.user@email.com',
       password: 'buyer.user',
@@ -99,10 +95,9 @@ async function createUsers() {
   });
 
   await prisma.user.upsert({
-    where: { id: 5 },
+    where: { email: 'other.seller.user@email.com' },
     update: {},
     create: {
-      id: 5,
       username: 'other.seller.user',
       email: 'other.seller.user@email.com',
       password: 'other.seller.user',
@@ -112,10 +107,9 @@ async function createUsers() {
   });
 
   await prisma.user.upsert({
-    where: { id: 6 },
+    where: { email: 'other.buyer.user@email.com' },
     update: {},
     create: {
-      id: 6,
       username: 'other.buyer.user',
       email: 'other.buyer.user@email.com',
       password: 'other.buyer.user',
