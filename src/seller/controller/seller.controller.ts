@@ -115,7 +115,7 @@ export class SellerController {
             }, 
         },
     })
-    @Post()
+    @Post('seller')
     async createSeller(@Body() data: SellerDTO): Promise<Seller> {
         console.log(data);
         return this.sellerService.create(data);
