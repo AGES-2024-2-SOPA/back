@@ -1,5 +1,4 @@
 export class UserDTO {
-  id?: number;
   username: string;
   email: string;
   password: string;
@@ -7,7 +6,6 @@ export class UserDTO {
   role_id: number;
 
   constructor(user: UserDTO) {
-    this.id = user.id;
     this.username = user.username;
     this.email = user.email;
     this.password = user.password;

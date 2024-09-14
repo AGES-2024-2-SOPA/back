@@ -13,7 +13,7 @@ import { Seller } from '@prisma/client';
 import { SellerDTO } from '../dtos/seller.dto';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 
-@Controller()
+@Controller('seller')
 export class SellerController {
     constructor(private sellerService: SellerService) {}
 
@@ -115,7 +115,7 @@ export class SellerController {
             }, 
         },
     })
-    @Post('seller')
+    @Post()
     async createSeller(@Body() data: SellerDTO): Promise<Seller> {
         console.log(data);
         return this.sellerService.create(data);
