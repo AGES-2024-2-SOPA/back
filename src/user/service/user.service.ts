@@ -80,6 +80,7 @@ export class UserService {
         password: passwordHash,
         document_number: data.document_number,
         role_id: data.role_id,
+        updated_at: new Date(),
       },
     });
   }
@@ -87,7 +88,10 @@ export class UserService {
   async remove(id: number): Promise<User> {
     return this.prisma.user.update({
       where: { id: parseInt(id.toString()) },
-      data: { is_active: false },
+      data: { 
+        is_active: false,
+        updated_at: new Date()
+       },
     });
   }
 }
