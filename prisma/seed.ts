@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { hash } from '../src/Security';
 
 const prisma = new PrismaClient();
 
@@ -52,7 +53,7 @@ async function createUsers() {
     create: {
       username: 'admin',
       email: 'admin@email.com',
-      password: 'admin',
+      password: await hash('admin'),
       document_number: '12345678900',
       role_id: 1,
     },
@@ -64,7 +65,7 @@ async function createUsers() {
     create: {
       username: 'user',
       email: 'user@email.com',
-      password: 'user',
+      password: await hash('user'),
       document_number: '12345678901',
       role_id: 2,
     },
@@ -76,7 +77,7 @@ async function createUsers() {
     create: {
       username: 'seller.user',
       email: 'seller.user@email.com',
-      password: 'seller.user',
+      password: await hash('seller.user'),
       document_number: '12345678903',
       role_id: 2,
     },
@@ -88,7 +89,7 @@ async function createUsers() {
     create: {
       username: 'buyer.user',
       email: 'buyer.user@email.com',
-      password: 'buyer.user',
+      password: await hash('buyer.user'),
       document_number: '12345678902',
       role_id: 2,
     },
@@ -100,7 +101,7 @@ async function createUsers() {
     create: {
       username: 'other.seller.user',
       email: 'other.seller.user@email.com',
-      password: 'other.seller.user',
+      password: await hash('other.seller.'),
       document_number: '12345678904',
       role_id: 2,
     },
