@@ -8,7 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { UserService } from '../service/user.service';
-import { User } from '@prisma/client';
+import { Car, User } from "@prisma/client";
 import { UserDTO } from '../dtos/user.dto';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 
@@ -102,4 +102,6 @@ export class UserController {
   async remove(@Param('id') id: number) {
     return this.userService.remove(id);
   }
+
+
 }

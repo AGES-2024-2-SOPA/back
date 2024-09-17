@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
 import { UserService } from 'src/user/service/user.service';
-import { Seller } from '@prisma/client';
+import { Car, Seller } from "@prisma/client";
 import { SellerDTO } from '../dtos/seller.dto';
 
 @Injectable()
@@ -41,4 +41,13 @@ export class SellerService {
       },
     });
   }
+  async stock(id: number): Promise<Car[]>  {
+    return this.prisma.car.findMany({
+      where: {
+        seller_id: parseInt(id.toString())
+      },
+      include: { parts: true },
+
+    });
+}
 }

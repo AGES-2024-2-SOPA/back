@@ -1,7 +1,7 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from "@nestjs/common";
 
 import { SellerService } from '../service/seller.service';
-import { Seller } from '@prisma/client';
+import { Car, Seller } from "@prisma/client";
 import { SellerDTO } from '../dtos/seller.dto';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 
@@ -112,4 +112,11 @@ export class SellerController {
     console.log(data);
     return this.sellerService.create(data);
   }
+
+  @ApiOperation({ summary: 'list cars' })
+  @Get(':id/cars')
+  async ListCars(@Param('id') id: number): Promise<Car[]> {
+    return this.sellerService.stock(id);
+  }
+
 }

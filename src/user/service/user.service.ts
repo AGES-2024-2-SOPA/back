@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Role, User } from '@prisma/client';
+import { Car, Role, User } from '@prisma/client';
 
 import { PrismaService } from 'src/shared/prisma/prisma.service';
 import { UserDTO } from '../dtos/user.dto';
@@ -88,10 +88,11 @@ export class UserService {
   async remove(id: number): Promise<User> {
     return this.prisma.user.update({
       where: { id: parseInt(id.toString()) },
-      data: { 
+      data: {
         is_active: false,
         updated_at: new Date()
        },
     });
   }
+
 }
